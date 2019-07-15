@@ -1,0 +1,6 @@
+cat /var/named/named.zones| grep -o '".*"'| sed 's/"//g'|sed 's/\.zone//' > cleanzones
+
+# This grep everything inside double quotes: ""
+# Gets rid of the ""
+# Gets rid of the .zone at the end of the second file
+# Outputs it to a file called cleanzones
