@@ -4,7 +4,7 @@
 
 ## linesT is the total number of lines in the entire file
 ## zonesT is the total number of zones. 5 lines in each zone entry. 
-## domsT is the total number of domains. Two domain initialisations in each zone. 
+## domsT is the total number of domain entries. Two domain initialisations in each zone. 
 
 linesT=$(cat /var/named/named.zones| sed '/^$/d'| wc -l)
 zonesT=$(( $linesT / 5 ))
@@ -15,7 +15,14 @@ printf "There will be exactly %s domains in the file.\n" "$domsT"
 ## Reads each line of the clean zone file into a seperate array element, by the name of 'lines'
 IFS=$'\n' read -d '' -r -a lines < /root/lewisTesting/cleanzones2
 
-# Initializes a for loop the length of the total number of domains.
+## The IF conditional in line 29 can be broken down as such:
+
+## The start %2 = 0 parameter checks if it's an even number. This is to break each pair of domains to a confined pair. 
+## I.e. domain and domain.zone should be checked but domain.zone should not be checked against domain2. 
+##  $(($start %2)) == 0 means if the number of the current position in the array is evenly divisible by 2
+## "${lines[$start]}" != "${lines[$start+1]}" means, if the current article at this position is not equal to the one after it. 
+
+# Initializes a fixed loop the length of the total number of domains.
 for (( start = 0; start <= $domsT; start++ ))
 do
   if [ $(($start %2)) == 0 ] && [ "${lines[$start]}" != "${lines[$start+1]}" ]; then
@@ -23,10 +30,3 @@ do
   fi
 done
 
-## The IF conditional in line 21 can be broken down as such:
-
-##  $(($start %2)) == 0 means if the number of the current position in the array is evenly divisible by 2
-## "${lines[$start]}" != "${lines[$start+1]}" means, if the current article at this position is not equal to the one after it. 
-
-## The start %2 = 0 parameter checks if it's an even number. This is to break each pair of domains to a confined pair. 
-## I.e. domain and domain.zone should be checked but domain.zone should not be checked against domain2. 
