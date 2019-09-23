@@ -145,5 +145,4 @@ print the element which is causing problems.
 
 The end result is a list printed to the console of any domains which don't have a properly written zone file. 
 
-
-
+It worked :)
